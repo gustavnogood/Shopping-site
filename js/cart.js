@@ -115,10 +115,21 @@ const calculateTotalSum = () => {
     document.getElementById('totalSum').innerText = `Total Sum: ${totalSum}`;
 }
 
+const deleteAllItems = () => {
+    basket = [];
+    updateLocalStorage();
+    generateCartItems();
+    updateBasketQuantity();
+    calculateTotalSum();
+}
+
 
 
 window.onload = function() {
     generateCartItems();
     updateBasketQuantity();
     calculateTotalSum();
+
+    const deleteAllButton = document.getElementById('delete-all-button');
+    deleteAllButton.onclick = deleteAllItems;
 }

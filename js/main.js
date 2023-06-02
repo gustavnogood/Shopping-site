@@ -1,16 +1,13 @@
 const shop = document.getElementById('shop');
- 
 let basket = JSON.parse(localStorage.getItem("data")) || [];
-
-// Produktdatat finns i variabeln shopData (se data.js)
 
 const getQuantity = (id) => {
     const item = basket.find(item => item.id === id);
     return item ? item.quantity : 0;
 }
 
-const generateShop = () => {
-    const shopItems = shopData.map(product => `
+const generateShop = (products) => {
+    const shopItems = products.map(product => `
         <div id="product-id-${product.id}" class="item">
             <img width="220" src=${product.image} alt=""> 
             <div class="details">
@@ -31,10 +28,9 @@ const generateShop = () => {
     `).join("");
 
     shop.innerHTML = shopItems;
-
 }
 
-generateShop()
+generateShop(shopData)
 
 const increment = (id) => {
     let product = basket.find(item => item.id === id);
@@ -45,7 +41,7 @@ const increment = (id) => {
         basket.push({ id: id, quantity: 1 });
     }
     updateLocalStorage();
-    generateShop();
+    generateShop(shopData);
     updateBasketQuantity();
 }
 
@@ -59,7 +55,7 @@ const decrement = (id) => {
         }
     }
     updateLocalStorage();
-    generateShop();
+    generateShop(shopData);
     updateBasketQuantity();
 }
 
@@ -73,4 +69,36 @@ const updateBasketQuantity = () => {
     document.getElementById("cartAmount").innerText = totalQuantity;
 }
 
-window.onload = updateBasketQuantity;
+const generateCategoryButtons = () => {
+    const categories = Array.from(new Set(shopData.map(product => product.category)));
+    categories.push("All Products");
+    const categoryList = document.getElementById('categories');
+
+    categories.forEach(category => {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.innerText = category;
+        button.onclick = () => filterProducts(category);
+        li.appendChild(button);
+        categoryList.appendChild(li);
+    });
+}
+
+const filterProducts = (category) => {
+    let filteredData;
+
+    if (category === "All Products") {
+        filteredData = shopData;
+    } else {
+        filteredData = shopData.filter(product => product.category === category);
+    }
+
+    generateShop(filteredData);
+}
+
+const init = () => {
+    updateBasketQuantity();
+    generateCategoryButtons();
+}
+
+window.onload = init;

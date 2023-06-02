@@ -23,6 +23,10 @@
     text-decoration: none;
     color: white;
   }
+
+  li {
+    list-style-type: none;
+  }
   
   /**
   * Navbar
@@ -211,6 +215,13 @@
 
   .label {
     text-align: center;
+  }
+
+  .delete {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    color: red;
   }
   
   
